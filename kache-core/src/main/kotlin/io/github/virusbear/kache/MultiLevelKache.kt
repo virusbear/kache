@@ -6,7 +6,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 class MultiLevelKache<K, V>(
     override val name: String,
     private val levels: List<KacheLevel<K, V>>,
-    private val populateCacheFromLowerLevels: Boolean
+    private val propagateDownstream: Boolean
 ): Kache<K, V> {
     private val coroutineScope = CoroutineScope(EmptyCoroutineContext)
 
@@ -25,7 +25,7 @@ class MultiLevelKache<K, V>(
             val slowValue = getInternal(key, levels, level + 1)
 
             if(slowValue != null) {
-                if(populateCacheFromLowerLevels) {
+                if(propagateDownstream) {
                     //Eventually consistent
                     coroutineScope.launch {
                         kache.put(key, slowValue)

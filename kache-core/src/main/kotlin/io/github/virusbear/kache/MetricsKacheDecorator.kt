@@ -48,3 +48,6 @@ class MetricsKacheDecorator<K, V>(private val kache: Kache<K, V>): Kache<K, V> b
         return result
     }
 }
+
+fun <K, V> Kache<K, V>.withMetrics(): Kache<K, V> =
+    MetricsKacheDecorator(this)
